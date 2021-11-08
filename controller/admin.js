@@ -9,8 +9,6 @@ import JwtService from '../service/jwtServices';
 
 
 
-import bcrypt from 'bcrypt';
-
 
 let Admin = {
 
@@ -54,13 +52,11 @@ try {
 
 try {
     
-    let hashedpassword= await bcrypt.hash(req.body.password,10);
-
-    console.log(hashedpassword);
-
+  
 
     // save document into dabatbse
-    let doc=new  DBAdmin({name:req.body.name,email:req.body.email,password:hashedpassword});
+    let doc=new  DBAdmin({name:req.body.name,email:req.body.email,password:req.body.password});
+
 
 
     try {
@@ -127,7 +123,8 @@ return next(error);
   try {
     let checkpassword;
       
-    checkpassword=await bcrypt.compare(req.body.password,admin.password);
+    checkpassword=await DBAdmin.findOne({password:req.body.password});
+
 // true when match 
     if(!checkpassword){
 
